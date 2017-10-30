@@ -6,30 +6,34 @@ import matplotlib.pyplot as plt
 from math import sqrt, exp, pi    #from smthg import * means we import all the functions of smthg and we can use them without specify smthg. before
 import numpy as np
 
-#from pdb import set_trace
-N = input("Number of samples ? ")			#Number of samples we want input to ask the user
-N = int(N)			#input() return a string, int change N into an integer
+N = int(input("Number of samples ? "))			#Number of samples we wantinput to ask the user input() return a string, int change it into an int
 
-def rejectfct(val):			#Function for the reject condition f/2g
+# Fct for the reject condition f/2g f~N(0,1) and g~Cauchy
+def rejectfct(val):
     val = ((1/sqrt(2*pi))*exp(-val**2/2))/(2*(1/pi)*(1/(val**2+1)))
     return val
 
+# Main fct of reject method, parameter M is the number of samples we want
 def rejectmethod(M):
-    X = np.array([])				#Empty list to store the selected samples
+    result = np.array([])				#Empty list to store the selected samples
 
-    #set_trace()
     for k in range(M):
-        U = 1
+        unif = 1
         tres = 0
-        while U > tres:
-            Y = np.random.standard_cauchy(1)
-            U = np.random.random_sample(1)
-            tres = rejectfct(Y[0])
-        X=np.append(X,Y[0])
-    return X
+        while unif > tres:
+            cauchy = np.random.standard_cauchy(1)
+            unif = np.random.random_sample(1)
+            tres = rejectfct(Cauchy[0])
+            result = np.append(result,cauchy[0])
+    return result
 
 R = rejectmethod(N)
 
+print(R)
+
+# rejectmethod seems to works but we can build a histogram to check that
+
+# Trying to build the histogram by hand : bad idea
 """def checkreject(x):
     nreal = 39
     B = np.zeros(nreal)
@@ -39,6 +43,9 @@ R = rejectmethod(N)
     return B
 """
 
+# Trying to use the built-in fcts of matplotlib : better idea but need to
+# understand what is going on here
+"""
 plt.hist(R, normed=True, bins=30)
 plt.title("Standard Gaussian hist")
 plt.xlabel("Value")
@@ -52,4 +59,4 @@ plt.plot(bins, y, 'r--')
 
 plt.subplots_adjust(left=0.15)
 plot_url = py.plot_mpl(fig, filename='mpl-basic-histogram')
-
+"""
